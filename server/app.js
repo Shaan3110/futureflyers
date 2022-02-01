@@ -1,7 +1,12 @@
 const express = require('express');
+const http = require('http');
+const cors = require("cors");
 const connecttomongo = require('./databases/Database');
 const app = express();
+const authMiddleware = require("./middlewares/auth-middleware");
+const dotenv=require("dotenv")
 
+dotenv.config()
 //port
 const port = process.env.PORT || 5000
 
@@ -9,10 +14,15 @@ connecttomongo();
 
 
 
+
 //middleware for json req
 app.use(express.json())
 
+//middleware for cors
+app.use(cors());
 
+
+app.use("/", authMiddleware);
 //Routes
 app.use('/auth/',require('./routes/Student.js'))
 
