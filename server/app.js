@@ -4,9 +4,7 @@ const cors = require("cors");
 const connecttomongo = require('./databases/Database');
 const app = express();
 const authMiddleware = require("./middlewares/auth-middleware");
-const dotenv=require("dotenv")
 
-dotenv.config()
 //port
 const port = process.env.PORT || 5000
 

@@ -1,21 +1,43 @@
-const firebase = require("firebase-admin");
+const firebase = require("../firebase/firebase-init");
 
 function authMiddleware(request, response, next) {
   const headerToken = request.headers.authorization;
   if (!headerToken) {
-    return response.send({ message: "No token provided" }).status(401);
+    return response.status(401).json({
+      "errors": [{
+        "value": headerToken,
+        "msg": "Unauthorized access to the server",
+        "param": "auth-token",
+        "location": "header"
+      }]
+    });
   }
 
   if (headerToken && headerToken.split(" ")[0] !== "Bearer") {
-    response.send({ message: "Invalid token" }).status(401);
+    response.status(401).json({
+      "errors": [{
+        "value": headerToken,
+        "msg": "Invalid token from the user",
+        "param": "auth-token",
+        "location": "header"
+      }]
+    });;
   }
 
+  let details=null;
   const token = headerToken.split(" ")[1];
   firebase
     .auth()
     .verifyIdToken(token)
-    .then(() => next())
-    .catch(() => response.send({ message: "Could not authorize" }).status(403));
+    .then((detail) =>{ req.details=detail;console.log(details);next();})
+    .catch(() => response.status(401).json({
+      "errors": [{
+        "value": headerToken,
+        "msg": "Unauthorized access from the user",
+        "param": "auth-token",
+        "location": "header"
+      }]
+    }));
 }
 
 module.exports = authMiddleware;
