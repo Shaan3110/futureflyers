@@ -8,7 +8,7 @@ const router = express.Router();
 
 //register route
 router.post('/user', 
-  middleware,
+    middleware,
     //checking if the email already exists on the database
     async(req,res)=>
     {

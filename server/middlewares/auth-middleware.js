@@ -17,7 +17,7 @@ function authMiddleware(request, response, next) {
     response.status(401).json({
       "errors": [{
         "value": headerToken,
-        "msg": "Invalid token from the user",
+        "msg": "Invalid format of token from the user",
         "param": "auth-token",
         "location": "header"
       }]
